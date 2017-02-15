@@ -1,1 +1,1 @@
-A personal blog powered by Laravel, developed using TDD.
+Yet another blog.
