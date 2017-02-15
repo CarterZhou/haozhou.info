@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::get('/articles', 'ArticleController@index');
+Route::get('/articles/{slug}', 'ArticleController@show')->name('articleSingle');

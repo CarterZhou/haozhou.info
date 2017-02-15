@@ -16,6 +16,7 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
+            $table->string('slug');
             $table->unsignedInteger('views')->default(0);
             $table->unsignedInteger('category_id')->nullable()->index();
             $table->timestamps();

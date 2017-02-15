@@ -10,7 +10,7 @@ class Article extends Model
 
     public function scopeTrending()
     {
-        return Article::select(['title', 'views'])
+        return Article::select(['title', 'slug','views'])
             ->orderBy('views', 'desc')
             ->get();
     }

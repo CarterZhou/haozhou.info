@@ -11,6 +11,15 @@ class ArticleController extends Controller
     {
         $articles = Article::trending();
 
-        return view('articles', compact('articles'));
+        return view('articles.index', compact('articles'));
+    }
+
+    public function show(Request $request)
+    {
+        $article = Article::select(['title','views'])
+            ->where('slug', $request->route('slug'))
+            ->first();
+
+        return view('articles.show', compact('article'));
     }
 }

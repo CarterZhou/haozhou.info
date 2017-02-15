@@ -13,8 +13,11 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\Article::class, function (Faker\Generator $faker) {
+    $title = $faker->sentence;
+    $slug = str_slug($title);
     return [
-        'title' => $faker->sentence
+        'title' => $title,
+        'slug' => $slug
     ];
 });
 
