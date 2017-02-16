@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Post;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateArticle;
+use App\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -12,7 +13,7 @@ class PostController extends Controller
     {
         $posts = Post::recent();
 
-        return view('posts.index', compact('posts'));
+        return view('admin.posts.index', compact('posts'));
     }
 
     public function show(Request $request)
@@ -21,12 +22,12 @@ class PostController extends Controller
             ->where('slug', $request->route('slug'))
             ->first();
 
-        return view('posts.show', compact('post'));
+        return view('admin.posts.show', compact('post'));
     }
 
     public function create()
     {
-        return view('posts.create');
+        return view('admin.posts.create');
     }
 
     public function store(CreateArticle $request)
@@ -37,6 +38,13 @@ class PostController extends Controller
             'slug' => str_slug($request->input('title'))
         ]);
 
-        return redirect('/posts');
+        return redirect('/admin/posts');
+    }
+
+    public function delete(Request $request)
+    {
+        Post::destroy($request->input('id'));
+
+        return redirect('/admin/posts');
     }
 }

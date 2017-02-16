@@ -10,14 +10,14 @@ class Post extends Model
 
     public function scopeTrending()
     {
-        return Post::select(['title', 'slug', 'views'])
+        return Post::select(['id', 'title', 'slug', 'views'])
             ->orderBy('views', 'desc')
             ->get();
     }
 
     public function scopeRecent()
     {
-        return Post::select(['title', 'slug', 'views'])
+        return Post::select(['id', 'title', 'slug', 'views'])
             ->latest()
             ->get();
     }

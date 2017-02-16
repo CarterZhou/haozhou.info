@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browser;
+namespace Tests\Browser\Admin;
 
 use App\Post;
 use Facebook\WebDriver\WebDriverBy;
@@ -23,7 +23,7 @@ class PostTest extends DuskTestCase
     public function user_can_see_a_list_of_posts()
     {
         $this->browse(function ($browser) {
-            $browser->visit('/posts');
+            $browser->visit('/admin/posts');
             $elements = $browser->driver->findElements(WebDriverBy::className('post-item'));
             $this->assertCount(10, $elements);
         });
@@ -34,9 +34,9 @@ class PostTest extends DuskTestCase
     {
         $post = $this->posts[0];
         $this->browse(function ($browser) use ($post) {
-            $browser->visit('/posts')
+            $browser->visit('/admin/posts')
                 ->clickLink($post->title)
-                ->assertPathIs('/posts/' . $post->slug)
+                ->assertPathIs('/admin/posts/' . $post->slug)
                 ->assertSee($post->title)
                 ->assertSee($post->body);
         });
@@ -51,11 +51,11 @@ class PostTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use ($data) {
-           $browser->visit('/posts/create')
+           $browser->visit('/admin/posts/create')
                ->type('title', $data['title'])
                ->type('body', $data['body'])
                ->press('Create')
-               ->assertPathIs('/posts')
+               ->assertPathIs('/admin/posts')
                ->assertSee($data['title']);
         });
     }
@@ -69,13 +69,25 @@ class PostTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use ($invalidData) {
-            $browser->visit('/posts/create')
+            $browser->visit('/admin/posts/create')
                 ->type('title', $invalidData['title'])
                 ->type('body', $invalidData['body'])
                 ->press('Create')
-                ->assertPathIs('/posts/create')
+                ->assertPathIs('/admin/posts/create')
                 ->assertSee('The title field is required')
                 ->assertSee('The body field is required');
+        });
+    }
+    /** @test */
+    public function user_can_delete_a_post()
+    {
+        $post = $this->posts[0];
+
+        $this->browse(function ($browser) use ($post) {
+            $browser->visit('/admin/posts')
+                ->assertSee($post->title)
+                ->press("delete-post-#{$post->id}")
+                ->assertDontSee($post->title);
         });
     }
 }
