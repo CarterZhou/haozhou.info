@@ -2,23 +2,23 @@
 
 namespace Tests\Feature;
 
-use App\Article;
+use App\Post;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ArticleTest extends TestCase
+class PostTest extends TestCase
 {
     use DatabaseMigrations;
 
     /** @test */
     public function it_fetches_trending_articles()
     {
-        factory(Article::class, 2)->create();
-        factory(Article::class)->create(['views' => 20]);
+        factory(Post::class, 2)->create();
+        factory(Post::class)->create(['views' => 20]);
 
-        $articles = Article::trending();
+        $articles = Post::trending();
         $this->assertEquals(20, $articles->first()->views);
     }
 }

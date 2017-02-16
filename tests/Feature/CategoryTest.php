@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Article;
+use App\Post;
 use App\Category;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -14,48 +14,48 @@ class CategoryTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function it_can_add_an_article()
+    public function it_can_add_a_post()
     {
         $category = factory(Category::class)->create();
-        $article = factory(Article::class)->create();
+        $post = factory(Post::class)->create();
 
-        $category->add($article);
+        $category->add($post);
 
-        $this->assertEquals(1, $category->articles()->count());
+        $this->assertEquals(1, $category->posts()->count());
     }
 
     /** @test */
-    public function it_can_add_multiple_articles_at_once()
+    public function it_can_add_multiple_posts_at_once()
     {
         $category = factory(Category::class)->create();
-        $articles = factory(Article::class, 5)->create();
+        $posts = factory(Post::class, 5)->create();
 
-        $category->add($articles);
+        $category->add($posts);
 
-        $this->assertEquals(5, $category->articles()->count());
+        $this->assertEquals(5, $category->posts()->count());
     }
 
     /** @test */
     public function it_can_remove_an_article()
     {
         $category = factory(Category::class)->create();
-        $articles = factory(Article::class, 5)->create();
-        $category->add($articles);
+        $posts = factory(Post::class, 5)->create();
+        $category->add($posts);
 
-        $category->remove($articles[0]);
+        $category->remove($posts[0]);
 
-        $this->assertEquals(4, $category->articles()->count());
+        $this->assertEquals(4, $category->posts()->count());
     }
 
     /** @test */
     public function it_can_remove_all_articles_at_once()
     {
         $category = factory(Category::class)->create();
-        $articles = factory(Article::class, 5)->create();
-        $category->add($articles);
+        $posts = factory(Post::class, 5)->create();
+        $category->add($posts);
 
         $category->removeAll();
 
-        $this->assertEquals(0, $category->articles()->count());
+        $this->assertEquals(0, $category->posts()->count());
     }
 }

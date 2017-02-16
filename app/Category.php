@@ -8,27 +8,27 @@ class Category extends Model
 {
     protected $guarded = ['id'];
 
-    public function add($articles)
+    public function add($posts)
     {
-        if ($articles instanceof Article) {
-            return $this->articles()->save($articles);
+        if ($posts instanceof Post) {
+            return $this->posts()->save($posts);
         }
-        return $this->articles()->saveMany($articles);
+        return $this->posts()->saveMany($posts);
     }
 
-    public function articles()
+    public function posts()
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Post::class);
     }
 
-    public function remove(Article $article)
+    public function remove(Post $post)
     {
-        $article->category()->dissociate();
-        $article->save();
+        $post->category()->dissociate();
+        $post->save();
     }
 
     public function removeAll()
     {
-        $this->articles()->update(['category_id' => null]);
+        $this->posts()->update(['category_id' => null]);
     }
 }

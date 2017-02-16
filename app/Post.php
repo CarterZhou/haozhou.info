@@ -4,14 +4,21 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Post extends Model
 {
     protected $guarded = ['id'];
 
     public function scopeTrending()
     {
-        return Article::select(['title', 'slug','views'])
+        return Post::select(['title', 'slug', 'views'])
             ->orderBy('views', 'desc')
+            ->get();
+    }
+
+    public function scopeRecent()
+    {
+        return Post::select(['title', 'slug', 'views'])
+            ->latest()
             ->get();
     }
 
