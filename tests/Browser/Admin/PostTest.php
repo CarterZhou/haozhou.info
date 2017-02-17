@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Admin;
 
+use App\Category;
 use App\Post;
 use Facebook\WebDriver\WebDriverBy;
 use Tests\DuskTestCase;
@@ -12,11 +13,15 @@ class PostTest extends DuskTestCase
     use DatabaseMigrations;
 
     protected $posts;
+    protected $categories;
 
     public function setUp()
     {
         parent::setUp();
-        $this->posts = factory(Post::class, 10)->create();
+        $this->categories = factory(Category::class, 5)->create();
+        $this->posts = factory(Post::class, 10)->create()->each(function($p) {
+            $this->categories[0]->add($p);
+        });
     }
 
     /** @test */
@@ -45,18 +50,24 @@ class PostTest extends DuskTestCase
     /** @test */
     public function user_can_create_a_new_post()
     {
+        $categorySelected = $this->categories[0];
+
         $data = [
             'title' => 'Testing',
-            'body' => 'This is a post for testing.'
+            'body' => 'This is a post for testing.',
+            'categoryId' => $categorySelected->id
         ];
 
-        $this->browse(function ($browser) use ($data) {
+        $this->browse(function ($browser) use ($data, $categorySelected) {
            $browser->visit('/admin/posts/create')
                ->type('title', $data['title'])
                ->type('body', $data['body'])
+               ->select('category', $data['categoryId'])
                ->press('Create')
                ->assertPathIs('/admin/posts')
-               ->assertSee($data['title']);
+               ->clickLink($data['title'])
+               ->assertSee($data['title'])
+               ->assertSee($categorySelected->name);
         });
     }
 

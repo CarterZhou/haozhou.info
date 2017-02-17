@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Category;
 use App\Post;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -13,7 +14,7 @@ class PostTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function it_fetches_trending_articles()
+    public function it_fetches_trending_posts()
     {
         factory(Post::class, 2)->create();
         factory(Post::class)->create(['views' => 20]);

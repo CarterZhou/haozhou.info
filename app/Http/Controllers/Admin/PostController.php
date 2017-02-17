@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateArticle;
 use App\Post;
@@ -18,7 +19,7 @@ class PostController extends Controller
 
     public function show(Request $request)
     {
-        $post = Post::select(['title', 'body', 'views'])
+        $post = Post::select(['id', 'title', 'body', 'views', 'category_id'])
             ->where('slug', $request->route('slug'))
             ->first();
 
@@ -27,16 +28,22 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all(['id' , 'name']);
+
+        return view('admin.posts.create', compact('categories'));
     }
 
     public function store(CreateArticle $request)
     {
-        Post::create([
+        $post = Post::create([
             'title' => $request->input('title'),
             'body' => $request->input('body'),
             'slug' => str_slug($request->input('title'))
         ]);
+
+        $category = Category::findOrFail($request->input('category'));
+
+        $category->add($post);
 
         return redirect('/admin/posts');
     }
