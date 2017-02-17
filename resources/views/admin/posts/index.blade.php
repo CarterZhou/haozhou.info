@@ -1,3 +1,6 @@
+@extends('admin.layouts.master')
+
+@section('content')
 <h1>A list of posts</h1>
 <ul>
     @foreach($posts as $post)
@@ -12,3 +15,4 @@
         </li>
     @endforeach
 </ul>
+@endsection
