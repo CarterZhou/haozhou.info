@@ -22,8 +22,27 @@ class Post extends Model
             ->get();
     }
 
+    public function addTags($tags = null)
+    {
+        $ids = [];
+        foreach ($tags as $tag) {
+            $ids[] = $tag->id;
+        }
+        $this->tags()->sync($ids);
+    }
+
+    public function removeTags()
+    {
+        $this->addTags();
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 }

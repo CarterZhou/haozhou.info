@@ -19,8 +19,10 @@ class CreatePostsTable extends Migration
             $table->text('body');
             $table->string('slug');
             $table->unsignedInteger('views')->default(0);
-            $table->unsignedInteger('category_id')->nullable()->index();
+            $table->unsignedInteger('category_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
