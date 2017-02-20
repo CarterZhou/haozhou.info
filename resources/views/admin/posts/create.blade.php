@@ -8,6 +8,11 @@
             <option value="{{ $category->id }}">{{ $category->name }}</option>
         @endforeach
     </select>
+    <select name="tags[]" id="tags" multiple>
+        @foreach($tags as $tag)
+            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+        @endforeach
+    </select>
     <textarea name="body" id="" cols="30" rows="10">{{ old('body') }}</textarea>
     <span> {{ $errors->first('body') }}</span>
     <button>Create</button>

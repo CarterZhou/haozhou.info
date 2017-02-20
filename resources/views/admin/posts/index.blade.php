@@ -6,10 +6,10 @@
     @foreach($posts as $post)
         <li class="post-item">
             <a href="{{ route('postSingle', ['slug' => $post->slug]) }}">{{ $post->title }}</a>
-            <form action="{{ route('deletePost', ['id' => $post->id]) }}">
+            <form action="{{ route('deletePost', ['id' => $post->id]) }}" method="post">
                 {{ csrf_field() }}
                 {{ method_field('DELETE') }}
-                <input type="hidden" value="{{ $post->id }}">
+                <input type="hidden" value="{{ $post->id }}" name="id">
                 <button name="delete-post-#{{ $post->id }}">Delete</button>
             </form>
         </li>

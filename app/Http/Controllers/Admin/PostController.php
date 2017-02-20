@@ -6,6 +6,7 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateArticle;
 use App\Post;
+use App\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -29,8 +30,9 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all(['id' , 'name']);
+        $tags = Tag::all(['id', 'name']);
 
-        return view('admin.posts.create', compact('categories'));
+        return view('admin.posts.create', compact('categories','tags'));
     }
 
     public function store(CreateArticle $request)
@@ -41,8 +43,11 @@ class PostController extends Controller
             'slug' => str_slug($request->input('title'))
         ]);
 
-        $category = Category::findOrFail($request->input('category'));
+        if ($request->has('tags')) {
+            $post->addTags(Tag::select(['id'])->whereIn('id', $request->input('tags'))->get());
+        }
 
+        $category = Category::findOrFail($request->input('category'));
         $category->add($post);
 
         return redirect('/admin/posts');

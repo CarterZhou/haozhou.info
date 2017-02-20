@@ -4,7 +4,9 @@ namespace Tests\Browser\Admin;
 
 use App\Category;
 use App\Post;
+use App\Tag;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverSelect;
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -14,11 +16,13 @@ class PostTest extends DuskTestCase
 
     protected $posts;
     protected $categories;
+    protected $tags;
 
     public function setUp()
     {
         parent::setUp();
         $this->categories = factory(Category::class, 5)->create();
+        $this->tags = factory(Tag::class, 5)->create();
         $this->posts = factory(Post::class, 10)->create()->each(function($p) {
             $this->categories[0]->add($p);
         });
@@ -99,6 +103,42 @@ class PostTest extends DuskTestCase
                 ->assertSee($post->title)
                 ->press("delete-post-#{$post->id}")
                 ->assertDontSee($post->title);
+        });
+    }
+
+    /** @test */
+    public function user_can_choose_more_than_one_tag_when_tagging_a_post_upon_creating_it()
+    {
+        $categorySelected = $this->categories[0];
+        $tagOne = $this->tags[0];
+        $tagTwo = $this->tags[1];
+
+        $data = [
+            'title' => 'Testing tagging',
+            'body' => 'This is a post for testing tagging.',
+            'categoryId' => $categorySelected->id,
+            'tagOne' => $tagOne->id,
+            'tagTwo' => $tagTwo->id
+        ];
+
+        $this->browse(function ($browser) use ($data, $categorySelected, $tagOne, $tagTwo) {
+
+            $browser->visit('/admin/posts/create')
+                ->type('title', $data['title'])
+                ->type('body', $data['body'])
+                ->select('category', $data['categoryId']);
+
+                $tagSelect = new WebDriverSelect($browser->driver->findElement(WebDriverBy::id('tags')));
+                $tagSelect->selectByValue($data['tagOne']);
+                $tagSelect->selectByValue($data['tagTwo']);
+
+                $browser->press('Create')
+                    ->assertPathIs('/admin/posts')
+                    ->clickLink($data['title'])
+                    ->assertSee($data['title'])
+                    ->assertSee($categorySelected->name)
+                    ->assertSee($tagOne->name)
+                    ->assertSee($tagTwo->name);
         });
     }
 }
