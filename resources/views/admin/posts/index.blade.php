@@ -1,18 +1,37 @@
 @extends('admin.layouts.master')
 
+@section('pageTitle')
+    <h3>Post page <small>managing blog posts</small></h3>
+@endsection
+
 @section('content')
-<h1>A list of posts</h1>
-<ul>
-    @foreach($posts as $post)
-        <li class="post-item">
-            <a href="{{ route('postSingle', ['slug' => $post->slug]) }}">{{ $post->title }}</a>
-            <form action="{{ route('deletePost', ['id' => $post->id]) }}" method="post">
-                {{ csrf_field() }}
-                {{ method_field('DELETE') }}
-                <input type="hidden" value="{{ $post->id }}" name="id">
-                <button name="delete-post-#{{ $post->id }}">Delete</button>
-            </form>
-        </li>
-    @endforeach
-</ul>
+<div class="table-responsive">
+    <table class="table table-striped jambo_table bulk_action">
+        <thead>
+        <tr class="headings">
+            <th class="column-title" style="display: table-cell;">Title </th>
+            <th class="column-title" style="display: table-cell;">Views </th>
+            <th class="column-title" style="display: table-cell;">Date of creation </th>
+            <th class="column-title no-link last" style="display: table-cell;"><span class="nobr">Action</span></th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach($posts as $post)
+            <tr class="post-item">
+                <td><a href="{{ route('postSingle', ['slug' => $post->slug]) }}">{{ $post->title }}</a></td>
+                <td>{{ $post->views }}</td>
+                <td>{{ $post->created_at }}</td>
+                <td class=" last">
+                    <form action="{{ route('deletePost', ['id' => $post->id]) }}" method="post">
+                        {{ csrf_field() }}
+                        {{ method_field('DELETE') }}
+                        <input type="hidden" value="{{ $post->id }}" name="id">
+                        <button name="delete-post-#{{ $post->id }}" class="btn btn-danger btn-xs">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 @endsection

@@ -17,7 +17,7 @@ class Post extends Model
 
     public function scopeRecent()
     {
-        return Post::select(['id', 'title', 'slug', 'views'])
+        return Post::select(['id', 'title', 'slug', 'views', 'created_at'])
             ->latest()
             ->get();
     }

@@ -11,6 +11,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="{{ asset('/vendors/gentelella/vendors/iCheck/skins/flat/green.css') }}" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="{{ asset('/vendors/gentelella/build/css/custom.min.css') }}" rel="stylesheet">
 </head>
@@ -72,7 +74,7 @@
             <div class="">
                 <div class="page-title">
                     <div class="title_left">
-                        <h3>Plain Page</h3>
+                        @yield('pageTitle')
                     </div>
                     <div class="title_right">
                         <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
@@ -89,10 +91,6 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
-                            <div class="x_title">
-                                <h2>Plain Page</h2>
-                                <div class="clearfix"></div>
-                            </div>
                             <div class="x_content">
                                 @yield('content')
                             </div>
@@ -118,6 +116,8 @@
 <script src="{{ asset('/vendors/gentelella/vendors/fastclick/lib/fastclick.js') }}"></script>
 <!-- NProgress -->
 <script src="{{ asset('/vendors/gentelella/vendors/nprogress/nprogress.js') }}"></script>
+<!-- iCheck -->
+<script src="{{ asset('/vendors/gentelella/vendors/iCheck/icheck.min.js') }}"></script>
 <!-- Custom Theme Scripts -->
 <script src="{{ asset('/vendors/gentelella/build/js/custom.min.js') }}"></script>
 </body>
