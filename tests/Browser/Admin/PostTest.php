@@ -63,7 +63,9 @@ class PostTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use ($data, $categorySelected) {
-           $browser->visit('/admin/posts/create')
+           $browser->visit('/admin/posts')
+               ->clickLink('New')
+               ->assertPathIs('/admin/posts/create')
                ->type('title', $data['title'])
                ->type('body', $data['body'])
                ->select('category', $data['categoryId'])
@@ -84,7 +86,9 @@ class PostTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use ($invalidData) {
-            $browser->visit('/admin/posts/create')
+            $browser->visit('/admin/posts')
+                ->clickLink('New')
+                ->assertPathIs('/admin/posts/create')
                 ->type('title', $invalidData['title'])
                 ->type('body', $invalidData['body'])
                 ->press('Create')

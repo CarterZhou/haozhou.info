@@ -13,6 +13,9 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- iCheck -->
     <link href="{{ asset('/vendors/gentelella/vendors/iCheck/skins/flat/green.css') }}" rel="stylesheet">
+
+    @yield('styles')
+
     <!-- Custom Theme Style -->
     <link href="{{ asset('/vendors/gentelella/build/css/custom.min.css') }}" rel="stylesheet">
 </head>
@@ -91,9 +94,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
-                            <div class="x_content">
-                                @yield('content')
-                            </div>
+                            @yield('content')
                         </div>
                     </div>
                 </div>
@@ -118,11 +119,10 @@
 <script src="{{ asset('/vendors/gentelella/vendors/nprogress/nprogress.js') }}"></script>
 <!-- iCheck -->
 <script src="{{ asset('/vendors/gentelella/vendors/iCheck/icheck.min.js') }}"></script>
-<!-- Custom Theme Scripts -->
-<script src="{{ asset('/vendors/gentelella/build/js/custom.min.js') }}"></script>
 <!-- Custom scripts specific page -->
 @yield('scripts')
-
+<!-- Custom Theme Scripts -->
+<script src="{{ asset('/vendors/gentelella/build/js/custom.min.js') }}"></script>
 </body>
 
 </html>

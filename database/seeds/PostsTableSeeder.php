@@ -14,13 +14,17 @@ class PostsTableSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker\Factory::create();
+
         Category::truncate();
         Post::truncate();
         Tag::truncate();
 
         $categories = factory(Category::class, 5)->create();
         factory(Tag::class, 5)->create();
-        factory(Post::class, 10)->create()->each(function($p) use ($categories) {
+        factory(Post::class, 10)->create()->each(function($p) use ($faker, $categories) {
+            $p->views = $faker->numberBetween(1,100);
+            $p->save();
             $categories[0]->add($p);
         });
     }
