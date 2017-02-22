@@ -101,8 +101,23 @@ class PostTest extends DuskTestCase
         $this->browse(function ($browser) use ($post) {
             $browser->visit('/admin/posts')
                 ->assertSee($post->title)
-                ->press("delete-post-#{$post->id}")
-                ->assertDontSee($post->title);
+                ->press("delete-post-#{$post->id}");
+            $browser->driver->switchTo()->alert()->accept();
+            $browser->assertDontSee($post->title);
+        });
+    }
+
+    /** @test */
+    public function user_can_cancel_deleting_a_post()
+    {
+        $post = $this->posts[0];
+
+        $this->browse(function ($browser) use ($post) {
+            $browser->visit('/admin/posts')
+                ->assertSee($post->title)
+                ->press("delete-post-#{$post->id}");
+            $browser->driver->switchTo()->alert()->dismiss();
+            $browser->assertSee($post->title);
         });
     }
 

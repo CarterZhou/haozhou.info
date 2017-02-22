@@ -120,6 +120,9 @@
 <script src="{{ asset('/vendors/gentelella/vendors/iCheck/icheck.min.js') }}"></script>
 <!-- Custom Theme Scripts -->
 <script src="{{ asset('/vendors/gentelella/build/js/custom.min.js') }}"></script>
+<!-- Custom scripts specific page -->
+@yield('scripts')
+
 </body>
 
 </html>

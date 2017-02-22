@@ -22,7 +22,7 @@
                 <td>{{ $post->views }}</td>
                 <td>{{ $post->created_at }}</td>
                 <td class=" last">
-                    <form action="{{ route('deletePost', ['id' => $post->id]) }}" method="post">
+                    <form action="{{ route('deletePost', ['id' => $post->id]) }}" method="post" class="delete-form">
                         {{ csrf_field() }}
                         {{ method_field('DELETE') }}
                         <input type="hidden" value="{{ $post->id }}" name="id">
@@ -34,4 +34,16 @@
         </tbody>
     </table>
 </div>
+@endsection
+
+@section('scripts')
+    <script>
+        jQuery(document).ready(function($) {
+            $('.delete-form').on('submit', function (e) {
+                if (!confirm('Are you sure to delete?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 @endsection
