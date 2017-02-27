@@ -33,7 +33,7 @@
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}
                                 <input type="hidden" value="{{ $post->id }}" name="id">
-                                <button name="delete-post-#{{ $post->id }}" class="btn btn-danger btn-xs">Delete</button>
+                                <button name="delete-post-{{ $post->uuid }}" class="btn btn-danger btn-xs">Delete</button>
                             </form>
                             <a href="{{ route('postUpdateView', ['id' => $post->id]) }}" id="update-post-{{ $post->uuid }}" class="btn btn-primary btn-xs link-to-post">Update</a>
                         </td>

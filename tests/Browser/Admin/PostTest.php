@@ -72,7 +72,8 @@ class PostTest extends DuskTestCase
             $browser->assertSee($data['title'])
                 ->assertSee($data['body'])
                 ->assertSee($categorySelected->name)
-                ->assertSee($tagOne->name);
+                ->assertSee($tagOne->name)
+                ->assertSee($tagTwo->name);
         });
     }
 
@@ -149,7 +150,7 @@ class PostTest extends DuskTestCase
         $this->browse(function ($browser) use ($post) {
             $browser->visit('/admin/posts')
                 ->assertSee($post->title)
-                ->press("delete-post-#{$post->id}");
+                ->press("delete-post-{$post->uuid}");
             $browser->driver->switchTo()->alert()->accept();
             $browser->assertDontSee($post->title);
         });
@@ -163,7 +164,7 @@ class PostTest extends DuskTestCase
         $this->browse(function ($browser) use ($post) {
             $browser->visit('/admin/posts')
                 ->assertSee($post->title)
-                ->press("delete-post-#{$post->id}");
+                ->press("delete-post-{$post->uuid}");
             $browser->driver->switchTo()->alert()->dismiss();
             $browser->assertSee($post->title);
         });
