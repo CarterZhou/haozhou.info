@@ -15,24 +15,27 @@ class PostController extends Controller
     {
         $posts = Post::recent();
 
-        return view('admin.posts.index', compact('posts'));
+        return view('admin.post.index', compact('posts'));
     }
 
-    public function show(Request $request)
+    public function update(Request $request)
     {
+        $categories = Category::all(['id', 'name']);
+        $tags = Tag::all(['id', 'name']);
+
         $post = Post::select(['id', 'title', 'body', 'views', 'category_id'])
-            ->where('slug', $request->route('slug'))
+            ->where('id', $request->route('id'))
             ->first();
 
-        return view('admin.posts.show', compact('post'));
+        return view('admin.post.update', compact('post', 'categories', 'tags'));
     }
 
     public function create()
     {
-        $categories = Category::all(['id' , 'name']);
+        $categories = Category::all(['id', 'name']);
         $tags = Tag::all(['id', 'name']);
 
-        return view('admin.posts.create', compact('categories','tags'));
+        return view('admin.post.create', compact('categories', 'tags'));
     }
 
     public function store(CreateArticle $request)
@@ -50,13 +53,13 @@ class PostController extends Controller
         $category = Category::findOrFail($request->input('category'));
         $category->add($post);
 
-        return redirect('/admin/posts');
+        return redirect()->route('postList');
     }
 
     public function delete(Request $request)
     {
         Post::destroy($request->input('id'));
 
-        return redirect('/admin/posts');
+        return redirect()->route('postList');
     }
 }

@@ -25,7 +25,7 @@
                 <tbody>
                     @foreach($posts as $post)
                     <tr class="post-item">
-                        <td><a href="{{ route('postSingle', ['slug' => $post->slug]) }}">{{ $post->title }}</a></td>
+                        <td>{{ $post->title }}</td>
                         <td>{{ $post->views }}</td>
                         <td>{{ $post->created_at }}</td>
                         <td class=" last">
@@ -35,6 +35,7 @@
                                 <input type="hidden" value="{{ $post->id }}" name="id">
                                 <button name="delete-post-#{{ $post->id }}" class="btn btn-danger btn-xs">Delete</button>
                             </form>
+                            <a href="{{ route('postSingle', ['id' => $post->id]) }}" id="update-post-{{ $post->id }}" class="btn btn-primary btn-xs">Update</a>
                         </td>
                     </tr>
                     @endforeach
