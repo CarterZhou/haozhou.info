@@ -7,7 +7,7 @@
 @section('content')
     <div class="x_title">
         <div class="pull-right">
-            <a href="{{ route('createCategory') }}" class="btn btn-primary btn-sm">New</a>
+            <a href="{{ route('categoryCreateView') }}" class="btn btn-primary btn-sm">New</a>
         </div>
         <div class="clearfix"></div>
     </div>

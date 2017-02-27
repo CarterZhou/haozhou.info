@@ -7,7 +7,7 @@
 @section('content')
     <div class="x_title">
         <div class="pull-right">
-            <a href="{{ route('createPost') }}" class="btn btn-primary btn-sm">New</a>
+            <a href="{{ route('postCreateView') }}" class="btn btn-primary btn-sm">New</a>
         </div>
         <div class="clearfix"></div>
     </div>
@@ -35,7 +35,7 @@
                                 <input type="hidden" value="{{ $post->id }}" name="id">
                                 <button name="delete-post-#{{ $post->id }}" class="btn btn-danger btn-xs">Delete</button>
                             </form>
-                            <a href="{{ route('postSingle', ['id' => $post->id]) }}" id="update-post-{{ $post->id }}" class="btn btn-primary btn-xs">Update</a>
+                            <a href="{{ route('postUpdateView', ['id' => $post->id]) }}" id="update-post-{{ $post->uuid }}" class="btn btn-primary btn-xs link-to-post">Update</a>
                         </td>
                     </tr>
                     @endforeach

@@ -14,7 +14,7 @@
         <div class="clearfix"></div>
     </div>
     <div class="x_content">
-        <form class="form-horizontal form-label-left" method="post" action="{{ route('storePost') }}">
+        <form class="form-horizontal form-label-left" method="post" action="{{ route('updatePost', ['id' => $post->id]) }}">
             {{ csrf_field() }}
             <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="title">Title <span class="required">*</span></label>
@@ -48,7 +48,7 @@
                 <div class="col-md-6 col-sm-6 col-xs-12" >
                     <select name="tags[]" id="tags" class="form-control" multiple>
                         @foreach($tags as $tag)
-                            <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                            <option value="{{ $tag->id }}" {{ in_array($tag->id, $postTagIds) ? 'selected': ''}}>{{ $tag->name }}</option>
                         @endforeach
                     </select>
                 </div>

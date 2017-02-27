@@ -14,7 +14,7 @@
         <div class="clearfix"></div>
     </div>
     <div class="x_content">
-        <form class="form-horizontal form-label-left" method="post" action="{{ route('storePost') }}">
+        <form class="form-horizontal form-label-left" method="post" action="{{ route('createPost') }}">
             {{ csrf_field() }}
             <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="title">Title <span class="required">*</span></label>

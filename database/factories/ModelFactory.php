@@ -18,7 +18,8 @@ $factory->define(App\Post::class, function (Faker\Generator $faker) {
     return [
         'title' => $title,
         'body' => $faker->paragraph,
-        'slug' => $slug
+        'slug' => $slug,
+        'uuid' => str_random(15)
     ];
 });
 

@@ -39,27 +39,40 @@ class PostTest extends DuskTestCase
     }
 
     /** @test */
-    public function user_can_create_a_new_post()
+    public function user_can_choose_more_than_one_tag_when_tagging_a_post_upon_creating_it()
     {
         $categorySelected = $this->categories[0];
+        $tagOne = $this->tags[0];
+        $tagTwo = $this->tags[1];
 
         $data = [
-            'title' => 'Testing',
-            'body' => 'This is a post for testing.',
-            'categoryId' => $categorySelected->id
+            'title' => 'Testing tagging',
+            'body' => 'This is a post for testing tagging.',
+            'categoryId' => $categorySelected->id,
+            'tagOne' => $tagOne->id,
+            'tagTwo' => $tagTwo->id
         ];
 
-        $this->browse(function ($browser) use ($data, $categorySelected) {
-           $browser->visit('/admin/posts')
-               ->clickLink('New')
-               ->assertPathIs('/admin/posts/create')
-               ->type('title', $data['title'])
-               ->type('body', $data['body'])
-               ->select('category', $data['categoryId'])
-               ->press('Create')
-               ->assertPathIs('/admin/posts')
-               ->assertSee($data['title']);
-           // TODO: inspect the new post to make sure its title and body are correct
+        $this->browse(function ($browser) use ($data, $categorySelected, $tagOne, $tagTwo) {
+
+            $browser->visit('/admin/posts/create')
+                ->type('title', $data['title'])
+                ->type('body', $data['body'])
+                ->select('category', $data['categoryId']);
+
+            $tagSelect = new WebDriverSelect($browser->driver->findElement(WebDriverBy::id('tags')));
+            $tagSelect->selectByValue($data['tagOne']);
+            $tagSelect->selectByValue($data['tagTwo']);
+
+            $browser->press('Create')->assertPathIs('/admin/posts');
+
+            $linkToNewPost = $browser->driver->findElements(WebDriverBy::className('link-to-post'))[0];
+            $linkToNewPost->click();
+
+            $browser->assertSee($data['title'])
+                ->assertSee($data['body'])
+                ->assertSee($categorySelected->name)
+                ->assertSee($tagOne->name);
         });
     }
 
@@ -87,15 +100,44 @@ class PostTest extends DuskTestCase
     /** @test */
     public function user_can_update_a_post()
     {
+        $categorySelected = $this->categories[0];
+        $tagOne = $this->tags[0];
         $post = $this->posts[0];
+        $postTags  = $post->tags;
 
-        $this->browse(function ($browser) use($post) {
+        $data = [
+            'title' => 'Changed Title',
+            'body' => 'Changed Body',
+            'categoryId' => $categorySelected->id,
+            'tagOne' => $tagOne->id
+        ];
+
+        $this->browse(function ($browser) use($post, $data, $postTags, $categorySelected, $tagOne) {
             $browser->visit('/admin/posts')
-                ->click("#update-post-{$post->id}")
+                ->click("#update-post-{$post->uuid}")
                 ->assertPathIs("/admin/posts/{$post->id}")
                 ->assertSee($post->title)
-                ->assertSee($post->body);
-            // TODO: modify the post, save it, and make sure data are changed
+                ->assertSee($post->body)
+                ->assertSee($post->category->name);
+
+            foreach ($postTags as $postTag) {
+                $browser->assertSee($postTag->name.'1');
+            }
+
+            $browser->type('title', $data['title'])
+                ->type('body', $data['body'])
+                ->select('category', $data['categoryId']);
+
+            $tagSelect = new WebDriverSelect($browser->driver->findElement(WebDriverBy::id('tags')));
+            $tagSelect->selectByValue($data['tagOne']);
+
+            $browser->press('Update')
+                ->assertPathIs('/admin/posts')
+                ->click("#update-post-{$post->uuid}")
+                ->assertSee($data['title'])
+                ->assertSee($data['body'])
+                ->assertSee($categorySelected->name)
+                ->assertSee($tagOne->name);
         });
     }
     
@@ -124,39 +166,6 @@ class PostTest extends DuskTestCase
                 ->press("delete-post-#{$post->id}");
             $browser->driver->switchTo()->alert()->dismiss();
             $browser->assertSee($post->title);
-        });
-    }
-
-    /** @test */
-    public function user_can_choose_more_than_one_tag_when_tagging_a_post_upon_creating_it()
-    {
-        $categorySelected = $this->categories[0];
-        $tagOne = $this->tags[0];
-        $tagTwo = $this->tags[1];
-
-        $data = [
-            'title' => 'Testing tagging',
-            'body' => 'This is a post for testing tagging.',
-            'categoryId' => $categorySelected->id,
-            'tagOne' => $tagOne->id,
-            'tagTwo' => $tagTwo->id
-        ];
-
-        $this->browse(function ($browser) use ($data, $categorySelected, $tagOne, $tagTwo) {
-
-            $browser->visit('/admin/posts/create')
-                ->type('title', $data['title'])
-                ->type('body', $data['body'])
-                ->select('category', $data['categoryId']);
-
-                $tagSelect = new WebDriverSelect($browser->driver->findElement(WebDriverBy::id('tags')));
-                $tagSelect->selectByValue($data['tagOne']);
-                $tagSelect->selectByValue($data['tagTwo']);
-
-                $browser->press('Create')
-                    ->assertPathIs('/admin/posts')
-                    ->assertSee($data['title']);
-                // TODO: inspect the new post to make sure its tags are correct
         });
     }
 }
