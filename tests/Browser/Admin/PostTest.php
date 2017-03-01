@@ -24,7 +24,7 @@ class PostTest extends DuskTestCase
         $this->categories = factory(Category::class, 5)->create();
         $this->tags = factory(Tag::class, 5)->create();
         $this->posts = factory(Post::class, 10)->create()->each(function($p) {
-            $this->categories[0]->add($p);
+            $this->categories[0]->addPosts($p);
             $p->addTags($this->tags[0]);
         });
     }

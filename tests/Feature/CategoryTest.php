@@ -19,7 +19,7 @@ class CategoryTest extends TestCase
         $category = factory(Category::class)->create();
         $post = factory(Post::class)->create();
 
-        $category->add($post);
+        $category->addPosts($post);
 
         $this->assertEquals(1, $category->posts()->count());
     }
@@ -30,7 +30,7 @@ class CategoryTest extends TestCase
         $category = factory(Category::class)->create();
         $posts = factory(Post::class, 5)->create();
 
-        $category->add($posts);
+        $category->addPosts($posts);
 
         $this->assertEquals(5, $category->posts()->count());
     }
@@ -40,9 +40,9 @@ class CategoryTest extends TestCase
     {
         $category = factory(Category::class)->create();
         $posts = factory(Post::class, 5)->create();
-        $category->add($posts);
+        $category->addPosts($posts);
 
-        $category->remove($posts[0]);
+        $category->removePosts($posts[0]);
 
         $this->assertEquals(4, $category->posts()->count());
     }
@@ -52,9 +52,9 @@ class CategoryTest extends TestCase
     {
         $category = factory(Category::class)->create();
         $posts = factory(Post::class, 5)->create();
-        $category->add($posts);
+        $category->addPosts($posts);
 
-        $category->removeAll();
+        $category->removePosts();
 
         $this->assertEquals(0, $category->posts()->count());
     }

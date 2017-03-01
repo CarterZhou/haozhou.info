@@ -25,7 +25,7 @@ class PostsTableSeeder extends Seeder
         factory(Post::class, 10)->create()->each(function($p) use ($faker, $categories) {
             $p->views = $faker->numberBetween(1,100);
             $p->save();
-            $categories[0]->add($p);
+            $categories[0]->addPosts($p);
         });
     }
 }

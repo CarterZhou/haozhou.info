@@ -10,5 +10,8 @@ Route::group(['prefix' => '/admin', 'namespace' => 'Admin'], function() {
 
     Route::get('/categories', 'CategoryController@index')->name('categoryList');
     Route::get('/categories/create', 'CategoryController@createView')->name('categoryCreateView');
+    Route::post('/categories', 'CategoryController@create')->name('createCategory');
+    Route::get('/categories/{id}', 'CategoryController@updateView')->name('categoryUpdateView')->where('id', '[0-9]+');
     Route::delete('/categories/{id}', 'CategoryController@delete')->name('deleteCategory')->where('id', '[0-9]+');
+    Route::post('/categories/{id}', 'CategoryController@update')->name('updateCategory')->where('id', '[0-9]+');
 });

@@ -18,6 +18,7 @@
                 <tr class="headings">
                     <th class="column-title" style="display: table-cell;">Name </th>
                     <th class="column-title" style="display: table-cell;">Date of creation </th>
+                    <th class="column-title" style="display: table-cell;">Date of update </th>
                     <th class="column-title no-link last" style="display: table-cell;"><span class="nobr">Action</span></th>
                 </tr>
                 </thead>
@@ -26,12 +27,14 @@
                     <tr class="category-item">
                         <td><a href="">{{ $category->name }}</a></td>
                         <td>{{ $category->created_at }}</td>
+                        <td>{{ $category->updated_at }}</td>
                         <td class="last">
                             <form action="{{ route('deleteCategory', ['id' => $category->id]) }}" method="post" class="delete-form">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}
                                 <input type="hidden" value="{{ $category->id }}" name="id">
-                                <button name="delete-post-#{{ $category->id }}" class="btn btn-danger btn-xs">Delete</button>
+                                <button name="delete-category-{{ $category->id }}" class="btn btn-danger btn-xs">Delete</button>
+                                <a href="{{ route('categoryUpdateView', ['id' => $category->id]) }}" id="update-category-{{ $category->id }}" class="btn btn-primary btn-xs link-to-category">Update</a>
                             </form>
                         </td>
                     </tr>

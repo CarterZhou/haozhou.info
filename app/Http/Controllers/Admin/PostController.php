@@ -40,7 +40,7 @@ class PostController extends Controller
         }
 
         $category = Category::findOrFail($request->input('category'));
-        $category->add($post);
+        $category->addPosts($post);
 
         return redirect()->route('postList');
     }

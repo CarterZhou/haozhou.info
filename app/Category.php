@@ -8,7 +8,7 @@ class Category extends Model
 {
     protected $guarded = ['id'];
 
-    public function add($posts)
+    public function addPosts($posts)
     {
         if ($posts instanceof Post) {
             return $this->posts()->save($posts);
@@ -21,14 +21,13 @@ class Category extends Model
         return $this->hasMany(Post::class);
     }
 
-    public function remove(Post $post)
+    public function removePosts($posts = null)
     {
-        $post->category()->dissociate();
-        $post->save();
-    }
-
-    public function removeAll()
-    {
-        $this->posts()->update(['category_id' => null]);
+        if ($posts instanceof Post) {
+            $posts->category()->dissociate();
+            $posts->save();
+            return true;
+        }
+        return $this->posts()->update(['category_id' => null]);
     }
 }
