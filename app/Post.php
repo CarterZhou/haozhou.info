@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
@@ -24,16 +25,12 @@ class Post extends Model
 
     public function addTags($tags = null)
     {
-        $ids = [];
-        foreach ($tags as $tag) {
-            $ids[] = $tag->id;
+        if ($tags instanceof Tag)
+        {
+            $collection = new Collection();
+            return $this->tags()->sync($collection->push($tags));
         }
-        $this->tags()->sync($ids);
-    }
-
-    public function removeTags()
-    {
-        $this->addTags();
+        return $this->tags()->sync($tags);
     }
 
     public function category()

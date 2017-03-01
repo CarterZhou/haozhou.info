@@ -25,6 +25,7 @@ class PostTest extends DuskTestCase
         $this->tags = factory(Tag::class, 5)->create();
         $this->posts = factory(Post::class, 10)->create()->each(function($p) {
             $this->categories[0]->add($p);
+            $p->addTags($this->tags[0]);
         });
     }
 
@@ -122,7 +123,7 @@ class PostTest extends DuskTestCase
                 ->assertSee($post->category->name);
 
             foreach ($postTags as $postTag) {
-                $browser->assertSee($postTag->name.'1');
+                $browser->assertSee($postTag->name);
             }
 
             $browser->type('title', $data['title'])
