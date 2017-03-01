@@ -19,6 +19,7 @@
                     <th class="column-title" style="display: table-cell;">Title </th>
                     <th class="column-title" style="display: table-cell;">Views </th>
                     <th class="column-title" style="display: table-cell;">Date of creation </th>
+                    <th class="column-title" style="display: table-cell;">Date of update </th>
                     <th class="column-title no-link last" style="display: table-cell;"><span class="nobr">Action</span></th>
                 </tr>
                 </thead>
@@ -28,14 +29,15 @@
                         <td>{{ $post->title }}</td>
                         <td>{{ $post->views }}</td>
                         <td>{{ $post->created_at }}</td>
+                        <td>{{ $post->updated_at }}</td>
                         <td class=" last">
                             <form action="{{ route('deletePost', ['id' => $post->id]) }}" method="post" class="delete-form">
                                 {{ csrf_field() }}
                                 {{ method_field('DELETE') }}
                                 <input type="hidden" value="{{ $post->id }}" name="id">
                                 <button name="delete-post-{{ $post->uuid }}" class="btn btn-danger btn-xs">Delete</button>
+                                <a href="{{ route('postUpdateView', ['id' => $post->id]) }}" id="update-post-{{ $post->uuid }}" class="btn btn-primary btn-xs link-to-post">Update</a>
                             </form>
-                            <a href="{{ route('postUpdateView', ['id' => $post->id]) }}" id="update-post-{{ $post->uuid }}" class="btn btn-primary btn-xs link-to-post">Update</a>
                         </td>
                     </tr>
                     @endforeach

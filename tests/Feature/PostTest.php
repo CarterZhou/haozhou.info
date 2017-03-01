@@ -25,7 +25,7 @@ class PostTest extends TestCase
     }
 
     /** @test */
-    public function it_can_add_one_tag_to_to_a_post()
+    public function it_can_add_one_tag_to_a_post()
     {
         $post = factory(Post::class)->create();
         $tag = factory(Tag::class)->create();
