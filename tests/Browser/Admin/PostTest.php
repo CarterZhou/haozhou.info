@@ -153,7 +153,10 @@ class PostTest extends DuskTestCase
                 ->assertSee($post->title)
                 ->press("delete-post-{$post->uuid}");
             $browser->driver->switchTo()->alert()->accept();
-            $browser->assertDontSee($post->title);
+
+            $browser->assertPathIs('/admin/posts')->assertDontSee($post->title);
+            $elements = $browser->driver->findElements(WebDriverBy::className('post-item'));
+            $this->assertCount(9, $elements);
         });
     }
 
