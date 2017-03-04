@@ -58,4 +58,18 @@ class CategoryTest extends TestCase
 
         $this->assertEquals(0, $category->posts()->count());
     }
+
+    /** @test */
+    public function it_can_remove_a_category_that_have_posts_associated_with()
+    {
+        $categories = factory(Category::class, 5)->create();
+        $firstCategory = $categories[0];
+        $posts = factory(Post::class, 5)->create();
+        $firstCategory->addPosts($posts);
+
+        $firstCategory->remove();
+        $categories = Category::all();
+
+        $this->assertCount(4, $categories);
+     }
 }

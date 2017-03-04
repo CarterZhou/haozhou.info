@@ -98,7 +98,10 @@ class CategoryTest extends DuskTestCase
                 ->assertSee($category->name)
                 ->press("delete-category-{$category->id}");
             $browser->driver->switchTo()->alert()->accept();
-            $browser->assertDontSee($category->name);
+
+            $browser->assertPathIs('/admin/categories')->assertDontSee($category->name);
+            $elements = $browser->driver->findElements(WebDriverBy::className('category-item'));
+            $this->assertCount(9, $elements);
         });
     }
 

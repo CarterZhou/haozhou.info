@@ -48,7 +48,8 @@ class CategoryController extends Controller
 
     public function delete(Request $request)
     {
-        Category::destroy($request->input('id'));
+        $category = Category::findOrFail($request->input('id'));
+        $category->remove();
 
         return redirect()->route('categoryList');
     }

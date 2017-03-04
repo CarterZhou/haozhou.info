@@ -25,9 +25,14 @@ class Category extends Model
     {
         if ($posts instanceof Post) {
             $posts->category()->dissociate();
-            $posts->save();
-            return true;
+            return $posts->save();
         }
         return $this->posts()->update(['category_id' => null]);
+    }
+
+    public function remove()
+    {
+         $this->removePosts();
+        return Category::destroy($this->id);
     }
 }
