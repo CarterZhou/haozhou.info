@@ -32,7 +32,7 @@ class Category extends Model
 
     public function remove()
     {
-         $this->removePosts();
+        $this->removePosts();
         return Category::destroy($this->id);
     }
 }

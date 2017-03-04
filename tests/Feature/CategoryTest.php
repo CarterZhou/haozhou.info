@@ -36,7 +36,7 @@ class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_remove_an_article()
+    public function it_can_remove_an_post()
     {
         $category = factory(Category::class)->create();
         $posts = factory(Post::class, 5)->create();
@@ -48,7 +48,7 @@ class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_remove_all_articles_at_once()
+    public function it_can_remove_all_posts_at_once()
     {
         $category = factory(Category::class)->create();
         $posts = factory(Post::class, 5)->create();
@@ -60,7 +60,7 @@ class CategoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_remove_a_category_that_have_posts_associated_with()
+    public function it_can_remove_a_category_that_has_posts_associated_with()
     {
         $categories = factory(Category::class, 5)->create();
         $firstCategory = $categories[0];
