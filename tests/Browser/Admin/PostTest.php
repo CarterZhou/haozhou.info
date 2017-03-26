@@ -58,8 +58,12 @@ class PostTest extends DuskTestCase
 
             $browser->visit('/admin/posts/create')
                 ->type('title', $data['title'])
-                ->type('body', $data['body'])
                 ->select('category', $data['categoryId']);
+
+            $browser->driver->switchTo()->frame('body_ifr');
+            $editorBody = $browser->driver->findElement(WebDriverBy::tagName('body'));
+            $browser->driver->executeScript("arguments[0].innerHTML = '{$data["body"]}';", [$editorBody]);
+            $browser->driver->switchTo()->defaultContent();
 
             $tagSelect = new WebDriverSelect($browser->driver->findElement(WebDriverBy::id('tags')));
             $tagSelect->selectByValue($data['tagOne']);
@@ -71,10 +75,12 @@ class PostTest extends DuskTestCase
             $linkToNewPost->click();
 
             $browser->assertSee($data['title'])
-                ->assertSee($data['body'])
                 ->assertSee($categorySelected->name)
                 ->assertSee($tagOne->name)
                 ->assertSee($tagTwo->name);
+
+            $browser->driver->switchTo()->frame('body_ifr');
+            $browser->assertSee($data['body']);
         });
     }
 
@@ -90,9 +96,14 @@ class PostTest extends DuskTestCase
             $browser->visit('/admin/posts')
                 ->clickLink('New')
                 ->assertPathIs('/admin/posts/create')
-                ->type('title', $invalidData['title'])
-                ->type('body', $invalidData['body'])
-                ->press('Create')
+                ->type('title', $invalidData['title']);
+
+            $browser->driver->switchTo()->frame('body_ifr');
+            $editorBody = $browser->driver->findElement(WebDriverBy::tagName('body'));
+            $browser->driver->executeScript("arguments[0].innerHTML = '{$invalidData["body"]}';", [$editorBody]);
+            $browser->driver->switchTo()->defaultContent();
+
+            $browser->press('Create')
                 ->assertPathIs('/admin/posts/create')
                 ->assertSee('The title field is required')
                 ->assertSee('The body field is required');
@@ -119,16 +130,23 @@ class PostTest extends DuskTestCase
                 ->click("#update-post-{$post->uuid}")
                 ->assertPathIs("/admin/posts/{$post->id}")
                 ->assertSee($post->title)
-                ->assertSee($post->body)
                 ->assertSee($post->category->name);
+
+            $browser->driver->switchTo()->frame('body_ifr');
+            $browser->assertSee($post->body);
+            $browser->driver->switchTo()->defaultContent();
 
             foreach ($postTags as $postTag) {
                 $browser->assertSee($postTag->name);
             }
 
             $browser->type('title', $data['title'])
-                ->type('body', $data['body'])
                 ->select('category', $data['categoryId']);
+
+            $browser->driver->switchTo()->frame('body_ifr');
+            $editorBody = $browser->driver->findElement(WebDriverBy::tagName('body'));
+            $browser->driver->executeScript("arguments[0].innerHTML = '{$data["body"]}';", [$editorBody]);
+            $browser->driver->switchTo()->defaultContent();
 
             $tagSelect = new WebDriverSelect($browser->driver->findElement(WebDriverBy::id('tags')));
             $tagSelect->selectByValue($data['tagOne']);
@@ -137,9 +155,11 @@ class PostTest extends DuskTestCase
                 ->assertPathIs('/admin/posts')
                 ->click("#update-post-{$post->uuid}")
                 ->assertSee($data['title'])
-                ->assertSee($data['body'])
                 ->assertSee($categorySelected->name)
                 ->assertSee($tagOne->name);
+
+            $browser->driver->switchTo()->frame('body_ifr');
+            $browser->assertSee($data['body']);
         });
     }
     

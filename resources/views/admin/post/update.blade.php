@@ -68,9 +68,6 @@
 
 @section('scripts')
     <script src="{{ asset('/vendors/gentelella/vendors/select2/dist/js/select2.full.min.js') }} "></script>
-    <script>
-        jQuery(document).ready(function($) {
-            $("#tags").select2({});
-        });
-    </script>
+    <script src="//cloud.tinymce.com/stable/tinymce.min.js?apiKey={{ env('TINYMCE_API_KEY') }}"></script>
+    <script src="{{ asset('/js/editor.js') }}"></script>
 @endsection
