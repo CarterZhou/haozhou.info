@@ -1,6 +1,8 @@
 <?php
 
 Route::group(['prefix' => '/admin', 'namespace' => 'Admin'], function() {
+    Route::get('/', 'DashboardController@index')->name('dashboard');
+
     Route::get('/posts', 'PostController@index')->name('postList');
     Route::get('/posts/create', 'PostController@createView')->name('postCreateView');
     Route::post('/posts', 'PostController@create')->name('createPost');
