@@ -2,11 +2,43 @@
 
 namespace Tests\Browser\Admin;
 
+use App\Category;
+use App\Post;
+use App\Tag;
+use Facebook\WebDriver\WebDriverBy;
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class MenuTest extends DuskTestCase
 {
+    use DatabaseMigrations;
+
+    protected $posts;
+    protected $categories;
+    protected $tags;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->categories = factory(Category::class, 5)->create();
+        $this->tags = factory(Tag::class, 5)->create();
+        $this->posts = factory(Post::class, 10)->create()->each(function($p) {
+            $this->categories[0]->addPosts($p);
+            $p->addTags($this->tags[0]);
+        });
+    }
+
+    /** @test */
+    public function user_can_go_to_dashboard_page()
+    {
+        $this->browse(function ($browser) {
+           $browser->visit('/admin/posts')
+               ->assertSee('Dashboard')
+               ->clickLink('Dashboard')
+               ->assertPathIs('/admin');
+        });
+    }
+
     /** @test */
     public function user_can_go_to_post_index_page()
     {
@@ -18,6 +50,9 @@ class MenuTest extends DuskTestCase
            $browser->waitForText('Post')
                ->clickLink('Post')
                ->assertPathIs('/admin/posts');
+
+            $elements = $browser->driver->findElements(WebDriverBy::className('post-item'));
+            $this->assertCount(10, $elements);
         });
     }
 
@@ -32,6 +67,9 @@ class MenuTest extends DuskTestCase
             $browser->waitForText('Category')
                 ->clickLink('Category')
                 ->assertPathIs('/admin/categories');
+
+            $elements = $browser->driver->findElements(WebDriverBy::className('category-item'));
+            $this->assertCount(5, $elements);
         });
     }
 
@@ -46,6 +84,9 @@ class MenuTest extends DuskTestCase
             $browser->waitForText('Tag')
                 ->clickLink('Tag')
                 ->assertPathIs('/admin/tags');
+
+            $elements = $browser->driver->findElements(WebDriverBy::className('tag-item'));
+            $this->assertCount(5, $elements);
         });
     }
 }
