@@ -9,6 +9,14 @@ use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
+    /**
+     * TagController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $tags = Tag::all(['id', 'name', 'created_at', 'updated_at']);

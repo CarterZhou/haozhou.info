@@ -11,6 +11,14 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    /**
+     * PostController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $posts = Post::recent();
