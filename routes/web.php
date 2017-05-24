@@ -3,7 +3,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['forceSSL']], function () {
 
     Auth::routes();
 
-    Route::group(['namespace' => 'Admin'], function () {
+    Route::group(['namespace' => 'Admin', 'middleware' => ['auth']], function () {
 
         Route::get('/', 'DashboardController@index')->name('dashboard');
 
