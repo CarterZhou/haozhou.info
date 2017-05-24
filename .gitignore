@@ -11,3 +11,4 @@ yarn.lock
 composer.lock
 _ide_helper.php
 /public/vendors/gentelella/vendors
+/tests/Browser/console
