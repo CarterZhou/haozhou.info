@@ -4,6 +4,7 @@ namespace Tests\Browser\Admin;
 
 use App\Post;
 use App\Tag;
+use App\User;
 use Facebook\WebDriver\WebDriverBy;
 use Tests\DuskTestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -18,23 +19,30 @@ class TagTest extends DuskTestCase
     public function setUp()
     {
         parent::setUp();
+        factory(User::class)->create();
         $this->tags = factory(Tag::class, 10)->create();
         $this->post = factory(Post::class)->create();
 
         $this->post->addTags($this->tags);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_tag
+     */
     public function user_can_see_a_list_of_tags()
     {
         $this->browse(function ($browser) {
-            $browser->visit('/admin/tags');
+            $browser->loginAs(User::find(1))->visit('/admin/tags');
             $elements = $browser->driver->findElements(WebDriverBy::className('tag-item'));
             $this->assertCount(10, $elements);
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_tag
+     */
     public function user_can_create_a_new_tag()
     {
         $data = [
@@ -42,7 +50,8 @@ class TagTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use($data) {
-           $browser->visit('/admin/tags')
+           $browser->loginAs(User::find(1))
+               ->visit('/admin/tags')
                ->clickLink('New')
                ->assertPathIs('/admin/tags/create')
                ->type('name', $data['name'])
@@ -54,7 +63,10 @@ class TagTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_tag
+     */
     public function user_cannot_create_tag_with_invalid_input()
     {
         $invalidData = [
@@ -62,7 +74,8 @@ class TagTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use($invalidData) {
-            $browser->visit('/admin/tags')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/tags')
                 ->clickLink('New')
                 ->assertPathIs('/admin/tags/create')
                 ->type('name', $invalidData['name'])
@@ -72,7 +85,10 @@ class TagTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_tag
+     */
     public function user_can_update_a_tag()
     {
         $tag = $this->tags[0];
@@ -82,7 +98,8 @@ class TagTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use($tag, $data) {
-           $browser->visit('/admin/tags')
+           $browser->loginAs(User::find(1))
+               ->visit('/admin/tags')
                ->click("#update-tag-{$tag->id}")
                ->assertSee($tag->name)
                ->type('name', $data['name'])
@@ -93,13 +110,17 @@ class TagTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_tag
+     */
     public function user_can_delete_a_tag()
     {
         $tag = $this->tags[0];
 
         $this->browse(function ($browser) use ($tag) {
-            $browser->visit('/admin/tags')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/tags')
                 ->assertSee($tag->name)
                 ->press("delete-tag-{$tag->id}");
             $browser->driver->switchTo()->alert()->accept();
@@ -110,13 +131,17 @@ class TagTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_tag
+     */
     public function user_can_cancel_deleting_a_tag()
     {
         $tag = $this->tags[0];
 
         $this->browse(function ($browser) use ($tag) {
-            $browser->visit('/admin/tags')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/tags')
                 ->assertSee($tag->name)
                 ->press("delete-tag-{$tag->id}");
             $browser->driver->switchTo()->alert()->dismiss();

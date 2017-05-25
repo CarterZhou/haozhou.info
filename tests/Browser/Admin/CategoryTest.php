@@ -4,6 +4,7 @@ namespace Tests\Browser\Admin;
 
 use App\Category;
 use App\Post;
+use App\User;
 use Facebook\WebDriver\WebDriverBy;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\DuskTestCase;
@@ -17,21 +18,28 @@ class CategoryTest extends DuskTestCase
     public function setUp()
     {
         parent::setUp();
+        factory(User::class)->create();
         $this->categories = factory(Category::class, 10)->create();
         $this->categories[0]->addPosts(factory(Post::class)->create());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_category
+     */
     public function user_can_see_a_list_of_categories()
     {
         $this->browse(function ($browser) {
-            $browser->visit('/admin/categories');
+            $browser->loginAs(User::find(1))->visit('/admin/categories');
             $elements = $browser->driver->findElements(WebDriverBy::className('category-item'));
             $this->assertCount(10, $elements);
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_category
+     */
     public function user_can_create_a_new_category()
     {
         $data = [
@@ -39,7 +47,8 @@ class CategoryTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use ($data) {
-            $browser->visit('/admin/categories')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/categories')
                 ->clickLink('New')
                 ->assertPathIs('/admin/categories/create')
                 ->type('name', $data['name'])
@@ -49,7 +58,10 @@ class CategoryTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_category
+     */
     public function user_cannot_create_category_with_invalid_input()
     {
         $invalidData = [
@@ -57,7 +69,8 @@ class CategoryTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use ($invalidData) {
-            $browser->visit('/admin/categories')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/categories')
                 ->clickLink('New')
                 ->assertPathIs('/admin/categories/create')
                 ->type('name', $invalidData['name'])
@@ -67,7 +80,10 @@ class CategoryTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_category
+     */
     public function user_can_update_a_category()
     {
         $category = $this->categories[0];
@@ -77,7 +93,8 @@ class CategoryTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use ($category, $data) {
-            $browser->visit('/admin/categories')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/categories')
                 ->click("#update-category-{$category->id}")
                 ->assertSee($category->name)
                 ->type('name', $data['name'])
@@ -88,13 +105,17 @@ class CategoryTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_category
+     */
     public function user_can_delete_a_category()
     {
         $category = $this->categories[0];
 
         $this->browse(function ($browser) use ($category) {
-            $browser->visit('/admin/categories')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/categories')
                 ->assertSee($category->name)
                 ->press("delete-category-{$category->id}");
             $browser->driver->switchTo()->alert()->accept();
@@ -105,13 +126,17 @@ class CategoryTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_category
+     */
     public function user_can_cancel_deleting_a_category()
     {
         $category = $this->categories[0];
 
         $this->browse(function ($browser) use ($category) {
-            $browser->visit('/admin/categories')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/categories')
                 ->assertSee($category->name)
                 ->press("delete-category-{$category->id}");
             $browser->driver->switchTo()->alert()->dismiss();

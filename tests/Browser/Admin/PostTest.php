@@ -5,6 +5,7 @@ namespace Tests\Browser\Admin;
 use App\Category;
 use App\Post;
 use App\Tag;
+use App\User;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverSelect;
 use Tests\DuskTestCase;
@@ -21,6 +22,7 @@ class PostTest extends DuskTestCase
     public function setUp()
     {
         parent::setUp();
+        factory(User::class)->create();
         $this->categories = factory(Category::class, 5)->create();
         $this->tags = factory(Tag::class, 5)->create();
         $this->posts = factory(Post::class, 10)->create()->each(function($p) {
@@ -29,17 +31,23 @@ class PostTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_post
+     */
     public function user_can_see_a_list_of_posts()
     {
         $this->browse(function ($browser) {
-            $browser->visit('/admin/posts');
+            $browser->loginAs(User::find(1))->visit('/admin/posts');
             $elements = $browser->driver->findElements(WebDriverBy::className('post-item'));
             $this->assertCount(10, $elements);
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_post
+     */
     public function user_can_choose_more_than_one_tag_when_tagging_a_post_upon_creating_it()
     {
         $categorySelected = $this->categories[0];
@@ -56,7 +64,8 @@ class PostTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($data, $categorySelected, $tagOne, $tagTwo) {
 
-            $browser->visit('/admin/posts/create')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/posts/create')
                 ->type('title', $data['title'])
                 ->select('category', $data['categoryId']);
 
@@ -84,7 +93,10 @@ class PostTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_post
+     */
     public function user_cannot_create_a_new_post_with_invalid_input()
     {
         $invalidData = [
@@ -93,7 +105,8 @@ class PostTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use ($invalidData) {
-            $browser->visit('/admin/posts')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/posts')
                 ->clickLink('New')
                 ->assertPathIs('/admin/posts/create')
                 ->type('title', $invalidData['title']);
@@ -109,8 +122,11 @@ class PostTest extends DuskTestCase
                 ->assertSee('The body field is required');
         });
     }
-    
-    /** @test */
+
+    /**
+     * @test
+     * @group admin_post
+     */
     public function user_can_update_a_post()
     {
         $categorySelected = $this->categories[0];
@@ -126,7 +142,8 @@ class PostTest extends DuskTestCase
         ];
 
         $this->browse(function ($browser) use($post, $data, $postTags, $categorySelected, $tagOne) {
-            $browser->visit('/admin/posts')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/posts')
                 ->click("#update-post-{$post->uuid}")
                 ->assertPathIs("/admin/posts/{$post->id}")
                 ->assertSee($post->title)
@@ -162,14 +179,18 @@ class PostTest extends DuskTestCase
             $browser->assertSee($data['body']);
         });
     }
-    
-    /** @test */
+
+    /**
+     * @test
+     * @group admin_post
+     */
     public function user_can_delete_a_post()
     {
         $post = $this->posts[0];
 
         $this->browse(function ($browser) use ($post) {
-            $browser->visit('/admin/posts')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/posts')
                 ->assertSee($post->title)
                 ->press("delete-post-{$post->uuid}");
             $browser->driver->switchTo()->alert()->accept();
@@ -180,13 +201,17 @@ class PostTest extends DuskTestCase
         });
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group admin_post
+     */
     public function user_can_cancel_deleting_a_post()
     {
         $post = $this->posts[0];
 
         $this->browse(function ($browser) use ($post) {
-            $browser->visit('/admin/posts')
+            $browser->loginAs(User::find(1))
+                ->visit('/admin/posts')
                 ->assertSee($post->title)
                 ->press("delete-post-{$post->uuid}");
             $browser->driver->switchTo()->alert()->dismiss();

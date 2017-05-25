@@ -10,5 +10,6 @@ Homestead.yaml
 yarn.lock
 composer.lock
 _ide_helper.php
+.env.dusk.local
 
 /public/vendors/gentelella/vendors
